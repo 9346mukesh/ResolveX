@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Ticket</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- ✅ ROLE IDENTIFIER -->
+<body data-role="USER">
+
+<div class="container">
+
+    <h2>Create New Ticket</h2>
+
+    <!-- ===== NAV BAR ===== -->
+    <div class="nav">
+        <a href="/dashboard">⬅ Back</a>
+
+        <!-- 🌙 / ☀️ THEME TOGGLE -->
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 / ☀️
+        </button>
+    </div>
+
+    <!-- IMPORTANT: enctype REQUIRED for file uploads -->
+    <form method="post" enctype="multipart/form-data">
+
+        <input type="text"
+               name="subject"
+               placeholder="Subject"
+               required>
+
+        <textarea name="description"
+                  placeholder="Describe the issue"
+                  required></textarea>
+
+        <select name="priority">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="URGENT">URGENT</option>
+        </select>
+
+        <!-- FILE ATTACHMENT -->
+        <label>Attach file / screenshot (optional)</label>
+        <input type="file"
+               name="attachment"
+               accept=".png,.jpg,.jpeg,.pdf,.txt">
+
+        <button type="submit" class="btn primary">
+            Create Ticket
+        </button>
+    </form>
+
+</div>
+
+<!-- 🌙 / ☀️ THEME SCRIPT -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+</body>
+</html>

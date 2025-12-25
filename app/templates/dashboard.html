@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- ✅ ROLE IDENTIFIER FOR THEME -->
+<body data-role="USER">
+
+<div class="container">
+
+    <h2>Welcome, {{ current_user.name }}</h2>
+
+    <!-- ===== NAV BAR ===== -->
+    <div class="nav">
+        <a href="/create-ticket">➕ Create Ticket</a>
+        <a href="/logout">Logout</a>
+
+        {% if current_user.role == "ADMIN" %}
+            <a href="/admin">Admin Panel</a>
+        {% endif %}
+
+        <!-- 🌙 / ☀️ THEME TOGGLE -->
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 / ☀️
+        </button>
+    </div>
+
+    <h3>Your Tickets</h3>
+
+    <!-- ===== TICKET LIST ===== -->
+    <ul class="ticket-list">
+        {% for ticket in tickets %}
+            <li class="ticket-card">
+
+                <!-- Ticket Info -->
+                <div class="ticket-info">
+                    <strong>{{ ticket.subject }}</strong><br>
+
+                    <span class="status {{ ticket.status }}">
+                        {{ ticket.status }}
+                    </span>
+
+                    <span class="priority {{ ticket.priority }}">
+                        {{ ticket.priority }}
+                    </span>
+                </div>
+
+                <!-- Ticket Action -->
+                <div class="ticket-actions">
+                    <a href="/ticket/{{ ticket.id }}" class="btn">
+                        View
+                    </a>
+                </div>
+
+            </li>
+        {% else %}
+            <li class="empty">
+                You haven’t created any tickets yet.
+            </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+<!-- 🌙 / ☀️ THEME SCRIPT -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+</body>
+</html>

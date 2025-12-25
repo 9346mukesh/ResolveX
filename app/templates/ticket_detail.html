@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- ✅ ROLE-BASED THEME IDENTIFIER -->
+<body data-role="{{ current_user.role }}">
+
+<div class="container">
+
+    <!-- ===== NAV BAR ===== -->
+    <div class="nav">
+        <a href="/dashboard">⬅ Back to Dashboard</a>
+
+        <!-- 🌙 / ☀️ THEME TOGGLE -->
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 / ☀️
+        </button>
+    </div>
+
+    <h2>{{ ticket.subject }}</h2>
+
+    <p>
+        <strong>Status:</strong>
+        <span class="status {{ ticket.status }}">
+            {{ ticket.status }}
+        </span>
+    </p>
+
+    <p>
+        <strong>Priority:</strong>
+        <span class="priority {{ ticket.priority }}">
+            {{ ticket.priority }}
+        </span>
+    </p>
+
+    <p><strong>Description:</strong></p>
+    <p>{{ ticket.description }}</p>
+
+    <!-- ================= CHANGE STATUS ================= -->
+    {% if current_user.role in ["ADMIN", "AGENT"] %}
+        <hr>
+        <h3>Change Status</h3>
+        <a href="/ticket/{{ ticket.id }}/status/IN_PROGRESS">In Progress</a> |
+        <a href="/ticket/{{ ticket.id }}/status/RESOLVED">Resolved</a> |
+        <a href="/ticket/{{ ticket.id }}/status/CLOSED">Closed</a>
+    {% endif %}
+
+    <!-- ================= COMMENTS ================= -->
+    <hr>
+    <h3>Comments</h3>
+
+    <ul class="comment-list">
+        {% for comment in comments %}
+            <li>{{ comment.comment }}</li>
+        {% else %}
+            <li class="empty">No comments yet</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Add Comment</h4>
+    <form method="post">
+        <textarea name="comment" required></textarea>
+        <button type="submit" class="btn primary">Add Comment</button>
+    </form>
+
+    <!-- ================= ⭐ RATE RESOLUTION ================= -->
+    <hr>
+    <h3>Rate Resolution</h3>
+
+    {% if current_user.role == "USER"
+          and ticket.created_by == current_user.id
+          and ticket.status == "RESOLVED"
+          and ticket.rating is none %}
+
+        <form method="post" action="/ticket/{{ ticket.id }}/rate">
+
+            <label><strong>Rating:</strong></label>
+            <select name="rating" required>
+                <option value="">Select</option>
+                <option value="1">⭐ 1</option>
+                <option value="2">⭐⭐ 2</option>
+                <option value="3">⭐⭐⭐ 3</option>
+                <option value="4">⭐⭐⭐⭐ 4</option>
+                <option value="5">⭐⭐⭐⭐⭐ 5</option>
+            </select>
+
+            <textarea name="feedback"
+                      placeholder="Optional feedback"
+                      rows="3"></textarea>
+
+            <button type="submit" class="btn primary">
+                Submit Rating
+            </button>
+        </form>
+
+    {% elif ticket.rating %}
+        <p>
+            <strong>Rating:</strong> {{ ticket.rating }} ⭐<br>
+            <strong>Feedback:</strong>
+            {{ ticket.feedback or "No feedback provided" }}
+        </p>
+
+    {% else %}
+        <p><em>Ticket can be rated only after it is resolved.</em></p>
+    {% endif %}
+
+</div>
+
+<!-- 🌙 / ☀️ THEME SCRIPT -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+</body>
+</html>

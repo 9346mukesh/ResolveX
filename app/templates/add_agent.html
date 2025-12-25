@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- ✅ ROLE IDENTIFIER FOR THEME -->
+<body data-role="ADMIN">
+
+<div class="container">
+
+    <h2>Add Support Agent</h2>
+
+    <!-- ===== NAV BAR ===== -->
+    <div class="nav">
+        <a href="/admin">⬅ Back to Admin Panel</a>
+
+        <!-- 🌙 / ☀️ THEME TOGGLE -->
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 / ☀️
+        </button>
+    </div>
+
+    <form method="post">
+
+        <input type="text"
+               name="name"
+               placeholder="Agent Name"
+               required>
+
+        <input type="email"
+               name="email"
+               placeholder="Agent Email"
+               required>
+
+        <input type="password"
+               name="password"
+               placeholder="Temporary Password"
+               required>
+
+        <button type="submit" class="btn primary">
+            Create Agent
+        </button>
+
+    </form>
+
+</div>
+
+<!-- 🌙 / ☀️ THEME SCRIPT -->
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- ✅ ROLE IDENTIFIER FOR THEME -->
+<body data-role="ADMIN">
+
+<div class="container">
+
+    <h2>Admin Panel</h2>
+
+    <!-- ===== NAV BAR ===== -->
+    <div class="nav">
+        <a href="/admin/add-agent">➕ Add New Agent</a>
+        <a href="/dashboard">⬅ Back to Dashboard</a>
+        <a href="/logout">Logout</a>
+
+        <!-- 🌙 / ☀️ THEME TOGGLE -->
+        <button onclick="toggleTheme()" class="theme-toggle">
+            🌙 / ☀️
+        </button>
+    </div>
+
+    <hr>
+
+    <!-- ================= USERS ================= -->
+    <h3>Users</h3>
+    <ul class="ticket-list">
+        {% for user in users %}
+            <li class="ticket-card">
+                <div class="ticket-info">
+                    <strong>{{ user.name }}</strong><br>
+                    <span class="status {{ user.role }}">{{ user.role }}</span>
+                </div>
+                <div class="ticket-actions">
+                    <a href="/admin/user/{{ user.id }}/role/USER">USER</a>
+                    <a href="/admin/user/{{ user.id }}/role/AGENT">AGENT</a>
+                    <a href="/admin/user/{{ user.id }}/role/ADMIN">ADMIN</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <!-- ================= TICKETS ================= -->
+    <h3>All Tickets</h3>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <input id="filterSubject" placeholder="Search by subject" onkeyup="filterTickets()">
+
+        <select id="filterStatus" onchange="filterTickets()">
+            <option value="">All Status</option>
+            <option value="OPEN">OPEN</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="RESOLVED">RESOLVED</option>
+            <option value="CLOSED">CLOSED</option>
+            <option value="ESCALATED">ESCALATED</option>
+        </select>
+
+        <select id="filterPriority" onchange="filterTickets()">
+            <option value="">All Priority</option>
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="URGENT">URGENT</option>
+        </select>
+
+        <select id="filterAssigned" onchange="filterTickets()">
+            <option value="">All Tickets</option>
+            <option value="assigned">Assigned</option>
+            <option value="unassigned">Unassigned</option>
+        </select>
+
+        <input id="filterAgent" placeholder="Agent name" onkeyup="filterTickets()">
+        <input id="filterCreator" placeholder="Created by user" onkeyup="filterTickets()">
+
+        <button onclick="resetFilters()">Reset</button>
+    </div>
+
+    <!-- ================= TICKET LIST ================= -->
+    <ul class="ticket-list">
+        {% for ticket in tickets.items %}
+        <li class="ticket-card"
+            data-status="{{ ticket.status }}"
+            data-priority="{{ ticket.priority }}"
+            data-subject="{{ ticket.subject }}"
+            data-assigned="{{ 'assigned' if ticket.assigned_to else 'unassigned' }}"
+            data-agent="{{ ticket.assignee.name if ticket.assigned_to else '' }}"
+            data-creator="{{ ticket.creator.name }}">
+
+            <div class="ticket-info">
+                <strong>{{ ticket.subject }}</strong><br>
+                <span class="status {{ ticket.status }}">{{ ticket.status }}</span>
+                <span class="priority {{ ticket.priority }}">{{ ticket.priority }}</span>
+            </div>
+
+            <div class="ticket-actions">
+                {% if ticket.assigned_to %}
+                    Assigned to <strong>{{ ticket.assignee.name }}</strong>
+                {% else %}
+                    <strong>Not Assigned</strong>
+                {% endif %}
+
+                {% if ticket.status == "ESCALATED" %}
+                    <a href="/admin/ticket/{{ ticket.id }}/take" class="btn danger">
+                        Take Ownership
+                    </a>
+                {% endif %}
+
+                <form method="post" action="/admin/ticket/{{ ticket.id }}/assign">
+                    <select name="agent_id" required>
+                        <option value="">Assign Agent</option>
+                        {% for user in users %}
+                            {% if user.role == "AGENT" %}
+                                <option value="{{ user.id }}">{{ user.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn">Assign</button>
+                </form>
+
+                <a href="/ticket/{{ ticket.id }}" class="btn">View</a>
+            </div>
+        </li>
+        {% else %}
+            <li class="empty">No tickets available</li>
+        {% endfor %}
+    </ul>
+
+    <!-- ================= PAGINATION ================= -->
+    <div class="pagination">
+        {% if tickets.has_prev %}
+            <a href="{{ url_for('admin_panel', page=tickets.prev_num) }}">⬅ Prev</a>
+        {% endif %}
+
+        <span>Page {{ tickets.page }} of {{ tickets.pages }}</span>
+
+        {% if tickets.has_next %}
+            <a href="{{ url_for('admin_panel', page=tickets.next_num) }}">Next ➡</a>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <!-- ================= CHARTS ================= -->
+    <h3>📊 Ticket Analytics</h3>
+
+    <div class="charts">
+        <div class="chart-box">
+            <h4>Tickets by Status</h4>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h4>Tickets by Priority</h4>
+            <canvas id="priorityChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h4>Tickets by Agent</h4>
+            <canvas id="agentChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script src="{{ url_for('static', filename='js/admin_filters.js') }}"></script>
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>

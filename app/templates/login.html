@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login | Ticketing System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<!-- 👇 IMPORTANT -->
+<body class="login-body">
+
+<div class="login-page">
+
+    <!-- LEFT SIDE -->
+    <div class="login-left">
+        <h1>🎫 Ticket Management System</h1>
+        <p>
+            A smart platform to raise, track, assign, and resolve issues efficiently.
+        </p>
+        <ul>
+            <li>✔ Role-based access</li>
+            <li>✔ Agent escalation</li>
+            <li>✔ Admin control panel</li>
+            <li>✔ Real-time status tracking</li>
+        </ul>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="login-right">
+        <div class="login-card">
+            <h2>Login</h2>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="flash">{{ messages[0] }}</div>
+              {% endif %}
+            {% endwith %}
+
+            <form method="post">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <p class="register-link">
+                Don’t have an account?
+                <a href="/register">Create new account</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
