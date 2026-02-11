@@ -11,7 +11,7 @@ Standard communication channels (email/chat) often lead to "lost" support reques
 
 | Component   | Technology                    | Role |
 |------------|--------------------------------|------|
-| Backend    | Python / Flask                | Core business logic & routing |
+| Backend    | Python / Flask                 | Core business logic & routing |
 | Database   | MySQL                          | Relational data storage |
 | ORM        | SQLAlchemy                     | Database abstraction & query management |
 | Auth       | Flask-Login                    | Session management & RBAC |
@@ -83,10 +83,10 @@ graph TD
   3. Virtual Environment (recommended)
   ### 2.Environment Setup
    #### Clone the repository
-    git clone https://github.com/your-username/ticketing-system.git
-    cd ticketing-system
+    git clone https://github.com/9346mukesh/ResolveX.git
+    cd ResolveX
 
-   #### Create and activate virtual environment
+   #### Create and activate a virtual environment
     python -m venv venv
     source venv/bin/activate  # On Windows: venv\Scripts\activate
 
@@ -97,15 +97,18 @@ graph TD
  ### 4. Initialize & Run
     python app.py
   ## 📊 Core Logic Explanation
-  1.Rating Guard: The Rating module includes logic to verify the ticket status. Ratings are only accepted if status == 'RESOLVED' and if the user_id matches the ticket creator.
+  1. Rating Guard: The Rating module includes logic to verify the ticket status. Ratings are accepted only if status == 'RESOLVED' and the user_id matches the ticket creator.
 
-  2.Escalation Logic: When an Agent marks a ticket as Escalated, it triggers a flag in the Admin view, moving the ticket to a high-priority "Internal Review" queue.
+  2. Escalation Logic: When an Agent marks a ticket as Escalated, it triggers a flag in the Admin view, moving the ticket to a high-priority "Internal Review" queue.
 
-  3.Theme Persistence: Implemented via a JavaScript listener that watches for the toggle state and updates the data-theme attribute on the <html> tag.
+  3 .Theme Persistence: Implemented via a JavaScript listener that watches for the toggle state and updates the data-theme attribute on the <html> tag.
 ## 🚀 Future Enhancements
-  1.Email Notifications: Automated alerts via Flask-Mail for status updates.
+  1. Email Notifications: Automated alerts via Flask-Mail for status updates.
+  
   2. Attachment Support: Integration with AWS S3 for uploading error logs/screenshots.
+  
   3. SLA Tracking: Visual timers for tickets nearing resolution deadlines.
+  
   4. Advanced Analytics: Data visualization using Chart.js for Admin insights.
 ## 👨‍💻 Author
   Mukesh Kumar Reddy B.Tech – Computer Science & Engineering
